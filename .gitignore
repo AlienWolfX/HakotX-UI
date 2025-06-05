@@ -1,2 +1,7 @@
 .venv/*
 ui/*
+compiled/*
+
+
+# Files
+.devdbrc
