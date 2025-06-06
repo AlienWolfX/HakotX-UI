@@ -1,3 +1,5 @@
+# Folders
+__pycache__
 .venv/*
 ui/*
 compiled/*
