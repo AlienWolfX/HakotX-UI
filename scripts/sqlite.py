@@ -1,51 +1,32 @@
 import sqlite3
-import hashlib
 import datetime
+import logging
 
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
 
-def login(username, password):
-    c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, hash_password(password)))
-    user = c.fetchone()
-    if user:
-        print("Login successful:", user)
-        return user
-    else:
-        print("Login failed.")
-        return None
-
-def register():
-    print("=== Register New User ===")
-    name = input("Name: ")
-    username = input("Username: ")
-    password = input("Password: ")
+def insert_wifi_info(ip, wlan_24, wlan_5, wlan_pwd_24, wlan_pwd_5):
     timestamp = datetime.datetime.now().isoformat()
-    try:
-        c.execute(
-            "INSERT INTO users (name, username, password, timestamp) VALUES (?, ?, ?, ?)",
-            (name, username, hash_password(password), timestamp)
-        )
-        conn.commit()
-        print("Registration successful!")
-    except sqlite3.IntegrityError:
-        print("Username already exists. Please try another.")
+    c.execute(
+        "INSERT INTO wifi_info (ip, wlan_24, wlan_5, wlan_pwd_24, wlan_pwd_5, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
+        (ip, wlan_24, wlan_5, wlan_pwd_24, wlan_pwd_5, timestamp)
+    )
+    conn.commit()
+    logging.info(f"{ip} has been added to the database")
 
 conn = sqlite3.connect('wifi_stuff.db')
 c = conn.cursor()
 
 c.execute('''
-    CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE IF NOT EXISTS wifi_info (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        username TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
+        ip TEXT NOT NULL,
+        wlan_24 TEXT NOT NULL,
+        wlan_5 TEXT NOT NULL,
+        wlan_pwd_24 TEXT NOT NULL,
+        wlan_pwd_5 TEXT NOT NULL,
         timestamp TEXT NOT NULL
     )
 ''')
 
-# Register a new user
-# register()
-
-# Example login
-# login("b", "12345")
+# Example usage:
+# insert_wifi_info("192.168.1.1", "MyWiFi_24", "MyWiFi_5", "password24", "password5")
