@@ -1,6 +1,7 @@
 .venv/*
 ui/*
 compiled/*
+logs/*
 
 
 # Files

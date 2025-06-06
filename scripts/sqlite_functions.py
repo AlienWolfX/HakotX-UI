@@ -2,7 +2,7 @@ import sqlite3
 import datetime
 import logging
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
+logging.basicConfig(filename="./logs/logs.txt" ,level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
 
 def insert_wifi_info(ip, wlan_24, wlan_5, wlan_pwd_24, wlan_pwd_5, source):
     timestamp = datetime.datetime.now().isoformat()
