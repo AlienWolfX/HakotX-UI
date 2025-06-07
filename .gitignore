@@ -1,7 +1,6 @@
 # Folders
 __pycache__
 .venv/*
-compiled/*
 logs/*
 
 

@@ -2,66 +2,71 @@ import sqlite3
 import datetime
 import logging
 
-logging.basicConfig(filename="./logs/logs.txt" ,level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
+logging.basicConfig(filename="./logs/logs.txt", level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
 
-def insert_wifi_info(ip, wlan_24, wlan_5, wlan_pwd_24, wlan_pwd_5, source):
-    timestamp = datetime.datetime.now().isoformat()
+def insert_onu_info(ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source):
+    last_updated = datetime.datetime.now().isoformat()
     try:
         c.execute(
-            "INSERT INTO wifi_info (ip, wlan_24, wlan_5, wlan_pwd_24, wlan_pwd_5, source, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (ip, wlan_24, wlan_5, wlan_pwd_24, wlan_pwd_5, source, timestamp)
+            "INSERT INTO onu_info (ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source, last_updated)
         )
         conn.commit()
-        logging.info(f"{ip} has been added to the database")
+        logging.info(f"{ip} ({mac}) has been added to the onu_info database")
     except Exception as e:
-        logging.error(f"Failed to insert WiFi info for {ip}: {e}")
+        logging.error(f"Failed to insert ONU info for {ip}: {e}")
 
-def display_specific_wifi_info(wlan_24=None, wlan_5=None):
+def display_specific_onu_info(ssid_24=None, ssid_5=None):
     try:
-        if wlan_24:
-            c.execute("SELECT * FROM wifi_info WHERE wlan_24 = ?", (wlan_24,))
-            row = c.fetchone()
-            if row:
-                print(row)
-                logging.info(f"Displayed WiFi info for wlan_24: {wlan_24}.")
+        if ssid_24:
+            c.execute("SELECT * FROM onu_info WHERE ssid_24 = ?", (ssid_24,))
+            rows = c.fetchall()
+            if rows:
+                for row in rows:
+                    print(row)
+                logging.info(f"Displayed ONU info for ssid_24: {ssid_24}.")
             else:
-                logging.warning(f"No records found for wlan_24: {wlan_24}")
-        elif wlan_5:
-            c.execute("SELECT * FROM wifi_info WHERE wlan_5 = ?", (wlan_5,))
-            row = c.fetchone()
-            if row:
-                print(row)
-                logging.info(f"Displayed WiFi info for wlan_5: {wlan_5}.")
+                logging.warning(f"No records found for ssid_24: {ssid_24}")
+        elif ssid_5:
+            c.execute("SELECT * FROM onu_info WHERE ssid_5 = ?", (ssid_5,))
+            rows = c.fetchall()
+            if rows:
+                for row in rows:
+                    print(row)
+                logging.info(f"Displayed ONU info for ssid_5: {ssid_5}.")
             else:
-                logging.warning(f"No records found for wlan_5: {wlan_5}")
+                logging.warning(f"No records found for ssid_5: {ssid_5}")
         else:
-            logging.warning("No wlan_24 or wlan_5 provided for lookup.")
+            logging.warning("No ssid_24 or ssid_5 provided for lookup.")
     except Exception as e:
-        logging.error(f"Failed to display WiFi info: {e}")
+        logging.error(f"Failed to display ONU info: {e}")
 
-def display_wifi_info():
+def display_onu_info():
     try:
-        c.execute("SELECT * FROM wifi_info")
+        c.execute("SELECT * FROM onu_info")
         rows = c.fetchall()
         for row in rows:
             print(row)
-        logging.info("Displayed all WiFi info records.")
+        logging.info("Displayed all ONU info records.")
     except Exception as e:
-        logging.error(f"Failed to display WiFi info: {e}")
+        logging.error(f"Failed to display ONU info: {e}")
 
-def update_wifi_info(record_id, ip=None, wlan_24=None, wlan_5=None, wlan_pwd_24=None, wlan_pwd_5=None, source=None):
+def update_onu_info(record_id, ip=None, mac=None, ssid_24=None, ssid_5=None, wlan_pwd_24=None, wlan_pwd_5=None, source=None):
     try:
         fields = []
         values = []
         if ip is not None:
             fields.append("ip = ?")
             values.append(ip)
-        if wlan_24 is not None:
-            fields.append("wlan_24 = ?")
-            values.append(wlan_24)
-        if wlan_5 is not None:
-            fields.append("wlan_5 = ?")
-            values.append(wlan_5)
+        if mac is not None:
+            fields.append("mac = ?")
+            values.append(mac)
+        if ssid_24 is not None:
+            fields.append("ssid_24 = ?")
+            values.append(ssid_24)
+        if ssid_5 is not None:
+            fields.append("ssid_5 = ?")
+            values.append(ssid_5)
         if wlan_pwd_24 is not None:
             fields.append("wlan_pwd_24 = ?")
             values.append(wlan_pwd_24)
@@ -74,31 +79,36 @@ def update_wifi_info(record_id, ip=None, wlan_24=None, wlan_5=None, wlan_pwd_24=
         if not fields:
             logging.warning("No fields to update.")
             return
+        # Always update last_updated
+        fields.append("last_updated = ?")
+        values.append(datetime.datetime.now().isoformat())
         values.append(record_id)
-        sql = f"UPDATE wifi_info SET {', '.join(fields)} WHERE id = ?"
+        sql = f"UPDATE onu_info SET {', '.join(fields)} WHERE id = ?"
         c.execute(sql, values)
         conn.commit()
-        logging.info(f"Record {record_id} updated successfully.")
+        logging.info(f"ONU record {record_id} updated successfully.")
     except Exception as e:
-        logging.error(f"Failed to update WiFi info for record {record_id}: {e}")
+        logging.error(f"Failed to update ONU info for record {record_id}: {e}")
 
 conn = sqlite3.connect('wifi_stuff.db')
 c = conn.cursor()
 
 c.execute('''
-    CREATE TABLE IF NOT EXISTS wifi_info (
+    CREATE TABLE IF NOT EXISTS onu_info (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         ip TEXT NOT NULL,
-        wlan_24 TEXT NOT NULL,
-        wlan_5 TEXT,
+        mac TEXT NOT NULL,
+        ssid_24 TEXT NOT NULL,
+        ssid_5 TEXT,
         wlan_pwd_24 TEXT NOT NULL,
         wlan_pwd_5 TEXT,
         source TEXT NOT NULL,
-        timestamp TEXT NOT NULL
+        last_updated TEXT NOT NULL
     )
 ''')
 
 # Example usage:
-# insert_wifi_info("192.168.1.1", "MyWiFi_24", "MyWiFi_5", "password24", "password5", "user_input")
-# display_wifi_info()
-# update_wifi_info(1, ip="192.168.1.2", wlan_pwd_24="newpassword24")
+# insert_onu_info("192.168.1.10", "AA:BB:CC:DD:EE:01", "HomeWiFi_24", "HomeWiFi_5", "pass24_1", "pass5_1", "manual")
+display_onu_info()
+# display_specific_onu_info(ssid_24="HomeWiFi_24")
+# update_onu_info(1, ip="192.168.1.100", wlan_pwd_24="newpass24")

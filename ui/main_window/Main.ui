@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabDatabase">
        <attribute name="title">
@@ -31,20 +31,6 @@
            <string>Search &amp; Filter</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout">
-           <item>
-            <widget class="QLineEdit" name="searchInput">
-             <property name="placeholderText">
-              <string>Search by IP, MAC or SSID...</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="searchButton">
-             <property name="text">
-              <string>Search</string>
-             </property>
-            </widget>
-           </item>
            <item>
             <spacer name="horizontalSpacer">
              <property name="orientation">
@@ -59,23 +45,16 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="addButton">
-             <property name="text">
-              <string>Add New</string>
+            <widget class="QLineEdit" name="searchInput">
+             <property name="placeholderText">
+              <string>Search by IP, MAC or SSID...</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="editButton">
+            <widget class="QPushButton" name="searchButton">
              <property name="text">
-              <string>Edit</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="deleteButton">
-             <property name="text">
-              <string>Delete</string>
+              <string>Search</string>
              </property>
             </widget>
            </item>
@@ -84,6 +63,9 @@
         </item>
         <item>
          <widget class="QTableWidget" name="databaseTable">
+          <attribute name="horizontalHeaderStretchLastSection">
+           <bool>true</bool>
+          </attribute>
           <column>
            <property name="text">
             <string>IP</string>
@@ -112,6 +94,11 @@
           <column>
            <property name="text">
             <string>Password (5GHz)</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Source</string>
            </property>
           </column>
           <column>
@@ -229,28 +216,52 @@
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <widget class="QGroupBox" name="groupBoxBrowser">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>60</height>
+           </size>
+          </property>
           <property name="title">
            <string>Navigation</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
             <widget class="QPushButton" name="backButton">
+             <property name="maximumSize">
+              <size>
+               <width>40</width>
+               <height>30</height>
+              </size>
+             </property>
              <property name="text">
-              <string>← Back</string>
+              <string>←</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QPushButton" name="forwardButton">
+             <property name="maximumSize">
+              <size>
+               <width>40</width>
+               <height>30</height>
+              </size>
+             </property>
              <property name="text">
-              <string>Forward →</string>
+              <string>→</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QPushButton" name="refreshButton">
+             <property name="maximumSize">
+              <size>
+               <width>40</width>
+               <height>30</height>
+              </size>
+             </property>
              <property name="text">
-              <string>Refresh</string>
+              <string>⟳</string>
              </property>
             </widget>
            </item>
@@ -263,6 +274,12 @@
            </item>
            <item>
             <widget class="QPushButton" name="goButton">
+             <property name="maximumSize">
+              <size>
+               <width>60</width>
+               <height>30</height>
+              </size>
+             </property>
              <property name="text">
               <string>Go</string>
              </property>
@@ -273,9 +290,15 @@
         </item>
         <item>
          <widget class="QWebEngineView" name="webView" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
           <property name="url" stdset="0">
            <url>
-            <string>https://www.google.com</string>
+            <string>https://www.github.com/AlienWolfX</string>
            </url>
           </property>
          </widget>
@@ -284,8 +307,14 @@
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
            <widget class="QPushButton" name="homeButton">
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>30</height>
+             </size>
+            </property>
             <property name="text">
-             <string>Home</string>
+             <string>⌂</string>
             </property>
            </widget>
           </item>
@@ -311,15 +340,27 @@
           </item>
           <item>
            <widget class="QPushButton" name="zoomInButton">
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>30</height>
+             </size>
+            </property>
             <property name="text">
-             <string>Zoom In</string>
+             <string>+</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="zoomOutButton">
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>30</height>
+             </size>
+            </property>
             <property name="text">
-             <string>Zoom Out</string>
+             <string>-</string>
             </property>
            </widget>
           </item>
@@ -388,14 +429,10 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionScan"/>
-   <addaction name="actionSave"/>
    <addaction name="separator"/>
-   <addaction name="actionAddRecord"/>
    <addaction name="actionEditRecord"/>
    <addaction name="actionDeleteRecord"/>
    <addaction name="separator"/>
-   <addaction name="actionNavigateBack"/>
-   <addaction name="actionNavigateForward"/>
    <addaction name="actionRefresh"/>
    <addaction name="actionHome"/>
   </widget>
