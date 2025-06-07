@@ -1,21 +1,29 @@
-import random
-import string
-from scripts.sqlite_functions import insert_wifi_info, display_specific_wifi_info, display_wifi_info, update_wifi_info
+import sys
+from PyQt6.QtWidgets import QApplication, QMainWindow, QDialog
+from compiled.main_window.Main import Ui_MainWindow 
+from compiled.dialog.About import Ui_aboutDialog
 
-def random_string(length=8):
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+class AboutDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.ui = Ui_aboutDialog()
+        self.ui.setupUi(self)
 
-for _ in range(5):
-    ip = f"192.168.1.{random.randint(2, 254)}"
-    wlan_24 = random_string()
-    wlan_5 = random_string()
-    wlan_pwd_24 = random_string(12)
-    wlan_pwd_5 = random_string(12)
-    source = "random_gen"
-    insert_wifi_info(ip, wlan_24, wlan_5, wlan_pwd_24, wlan_pwd_5, source)
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        
+        if hasattr(self.ui, "actionAbout"):
+            self.ui.actionAbout.triggered.connect(self.show_about)
 
-display_wifi_info()
+    def show_about(self):
+        about = AboutDialog(self)
+        about.exec()
 
-display_specific_wifi_info(wlan_24=wlan_24)
-
-update_wifi_info(1, wlan_pwd_24="newpassword24")
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
