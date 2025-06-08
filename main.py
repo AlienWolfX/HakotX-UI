@@ -1,9 +1,15 @@
 import sys
-import sqlite3
 import datetime
 from PyQt6.QtWidgets import QApplication, QMainWindow, QDialog, QTableWidgetItem
 from compiled.main_window.Main import Ui_MainWindow 
 from compiled.dialog.About import Ui_aboutDialog
+from scripts.sqlite_functions import (
+    display_onu_info,
+    insert_onu_info,
+    update_onu_info,
+    display_specific_onu_info,
+    search_onu_info  # <-- Add this import after you implement it below
+)
 
 class AboutDialog(QDialog):
     def __init__(self, parent=None):
@@ -26,24 +32,11 @@ class MainWindow(QMainWindow):
             self.ui.actionAbout.triggered.connect(self.show_about)
 
     def load_database_table(self):
-        conn = sqlite3.connect('wifi_stuff.db')
-        c = conn.cursor()
-
         search_text = self.ui.searchInput.text() if hasattr(self.ui, "searchInput") else ""
         if search_text:
-            query = """
-                SELECT ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source, last_updated
-                FROM onu_info
-                WHERE ip LIKE ? OR mac LIKE ? OR ssid_24 LIKE ? OR ssid_5 LIKE ?
-            """
-            like = f"%{search_text}%"
-            c.execute(query, (like, like, like, like))
+            rows = search_onu_info(search_text)
         else:
-            c.execute("""
-                SELECT ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source, last_updated
-                FROM onu_info
-            """)
-        rows = c.fetchall()
+            rows = display_onu_info(return_rows=True)
         self.ui.databaseTable.setRowCount(len(rows))
         self.ui.databaseTable.setColumnCount(8)
         for row_idx, row_data in enumerate(rows):
@@ -55,7 +48,6 @@ class MainWindow(QMainWindow):
                     except Exception:
                         pass
                 self.ui.databaseTable.setItem(row_idx, col_idx, QTableWidgetItem(str(value)))
-        conn.close()
 
     def show_about(self):
         about = AboutDialog(self)

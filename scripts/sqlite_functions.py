@@ -16,40 +16,37 @@ def insert_onu_info(ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source):
     except Exception as e:
         logging.error(f"Failed to insert ONU info for {ip}: {e}")
 
-def display_specific_onu_info(ssid_24=None, ssid_5=None):
-    try:
-        if ssid_24:
-            c.execute("SELECT * FROM onu_info WHERE ssid_24 = ?", (ssid_24,))
-            rows = c.fetchall()
-            if rows:
-                for row in rows:
-                    print(row)
-                logging.info(f"Displayed ONU info for ssid_24: {ssid_24}.")
-            else:
-                logging.warning(f"No records found for ssid_24: {ssid_24}")
-        elif ssid_5:
-            c.execute("SELECT * FROM onu_info WHERE ssid_5 = ?", (ssid_5,))
-            rows = c.fetchall()
-            if rows:
-                for row in rows:
-                    print(row)
-                logging.info(f"Displayed ONU info for ssid_5: {ssid_5}.")
-            else:
-                logging.warning(f"No records found for ssid_5: {ssid_5}")
-        else:
-            logging.warning("No ssid_24 or ssid_5 provided for lookup.")
-    except Exception as e:
-        logging.error(f"Failed to display ONU info: {e}")
 
-def display_onu_info():
+def search_onu_info(search_text):
     try:
-        c.execute("SELECT * FROM onu_info")
+        query = """
+            SELECT ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source, last_updated
+            FROM onu_info
+            WHERE ip LIKE ? OR mac LIKE ? OR ssid_24 LIKE ? OR ssid_5 LIKE ?
+        """
+        like = f"%{search_text}%"
+        c.execute(query, (like, like, like, like))
         rows = c.fetchall()
+        return rows
+    except Exception as e:
+        logging.error(f"Failed to search ONU info: {e}")
+        return []
+
+def display_onu_info(return_rows=False):
+    try:
+        c.execute("""
+            SELECT ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source, last_updated
+            FROM onu_info
+        """)
+        rows = c.fetchall()
+        if return_rows:
+            return rows
         for row in rows:
             print(row)
         logging.info("Displayed all ONU info records.")
     except Exception as e:
         logging.error(f"Failed to display ONU info: {e}")
+        return []
 
 def update_onu_info(record_id, ip=None, mac=None, ssid_24=None, ssid_5=None, wlan_pwd_24=None, wlan_pwd_5=None, source=None):
     try:
@@ -106,9 +103,3 @@ c.execute('''
         last_updated TEXT NOT NULL
     )
 ''')
-
-# Example usage:
-# insert_onu_info("192.168.1.10", "AA:BB:CC:DD:EE:01", "HomeWiFi_24", "HomeWiFi_5", "pass24_1", "pass5_1", "manual")
-display_onu_info()
-# display_specific_onu_info(ssid_24="HomeWiFi_24")
-# update_onu_info(1, ip="192.168.1.100", wlan_pwd_24="newpass24")
