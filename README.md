@@ -23,3 +23,7 @@ HakotX-UI/
 ├── main.py
 └── README.md
 ```
+
+## Attributions
+
+Icons by Yusuke Kamiyamane – Licensed under Creative Commons Attribution 3.0.

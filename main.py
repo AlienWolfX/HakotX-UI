@@ -7,8 +7,7 @@ from scripts.sqlite_functions import (
     display_onu_info,
     insert_onu_info,
     update_onu_info,
-    display_specific_onu_info,
-    search_onu_info  # <-- Add this import after you implement it below
+    search_onu_info
 )
 
 class AboutDialog(QDialog):
@@ -27,6 +26,9 @@ class MainWindow(QMainWindow):
 
         if hasattr(self.ui, "searchButton"):
             self.ui.searchButton.clicked.connect(self.load_database_table)
+
+        if hasattr(self.ui, "searchInput"):
+            self.ui.searchInput.textChanged.connect(self.load_database_table)
 
         if hasattr(self.ui, "actionAbout"):
             self.ui.actionAbout.triggered.connect(self.show_about)

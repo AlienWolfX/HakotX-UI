@@ -122,34 +122,6 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QLabel" name="labelStartIP">
-             <property name="text">
-              <string>Start IP:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="startIP">
-             <property name="placeholderText">
-              <string>192.168.1.1</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="labelEndIP">
-             <property name="text">
-              <string>End IP:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="endIP">
-             <property name="placeholderText">
-              <string>192.168.1.254</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <spacer name="horizontalSpacer_2">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -161,6 +133,20 @@
               </size>
              </property>
             </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelStartIP">
+             <property name="text">
+              <string>ONU IP Address</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="startIP">
+             <property name="placeholderText">
+              <string>192.168.1.1</string>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QPushButton" name="scanButton">
@@ -235,7 +221,11 @@
               </size>
              </property>
              <property name="text">
-              <string>←</string>
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-32/arrow-180.png</normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-32/arrow-180.png</iconset>
              </property>
             </widget>
            </item>
@@ -248,7 +238,11 @@
               </size>
              </property>
              <property name="text">
-              <string>→</string>
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-32/arrow.png</normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-32/arrow.png</iconset>
              </property>
             </widget>
            </item>
@@ -261,7 +255,11 @@
               </size>
              </property>
              <property name="text">
-              <string>⟳</string>
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-24/arrow-circle-315.png</normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-24/arrow-circle-315.png</iconset>
              </property>
             </widget>
            </item>
@@ -314,7 +312,11 @@
              </size>
             </property>
             <property name="text">
-             <string>⌂</string>
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../../../../Fugue Icons Pack/icons-shadowless/home.png</normaloff>../../../../Fugue Icons Pack/icons-shadowless/home.png</iconset>
             </property>
            </widget>
           </item>
@@ -347,7 +349,11 @@
              </size>
             </property>
             <property name="text">
-             <string>+</string>
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-32/plus.png</normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-32/plus.png</iconset>
             </property>
            </widget>
           </item>
@@ -360,7 +366,11 @@
              </size>
             </property>
             <property name="text">
-             <string>-</string>
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-32/minus.png</normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-32/minus.png</iconset>
             </property>
            </widget>
           </item>
@@ -394,7 +404,6 @@
     <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="actionAddRecord"/>
     <addaction name="actionEditRecord"/>
     <addaction name="actionDeleteRecord"/>
    </widget>
@@ -402,8 +411,6 @@
     <property name="title">
      <string>View</string>
     </property>
-    <addaction name="actionNavigateBack"/>
-    <addaction name="actionNavigateForward"/>
     <addaction name="actionRefresh"/>
     <addaction name="actionHome"/>
    </widget>
@@ -450,22 +457,37 @@
    </property>
   </action>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-32/question.png</normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-32/question.png</iconset>
+   </property>
    <property name="text">
     <string>About</string>
    </property>
   </action>
   <action name="actionScan">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-24/magnifier-left.png</normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-24/magnifier-left.png</iconset>
+   </property>
    <property name="text">
-    <string>Scan Networks</string>
+    <string>Scan Network</string>
    </property>
    <property name="toolTip">
     <string>Scan for available ONU devices</string>
+   </property>
+   <property name="statusTip">
+    <string extracomment="Scan ONU IP"/>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionSave">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../Fugue Icons Pack/icons/folder-stamp.png</normaloff>../../../../Fugue Icons Pack/icons/folder-stamp.png</iconset>
+   </property>
    <property name="text">
     <string>Save Changes</string>
    </property>
@@ -488,6 +510,10 @@
    </property>
   </action>
   <action name="actionEditRecord">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../Fugue Icons Pack/icons-shadowless/database--pencil.png</normaloff>../../../../Fugue Icons Pack/icons-shadowless/database--pencil.png</iconset>
+   </property>
    <property name="text">
     <string>Edit Record</string>
    </property>
@@ -499,6 +525,10 @@
    </property>
   </action>
   <action name="actionDeleteRecord">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../Fugue Icons Pack/icons-shadowless/database-delete.png</normaloff>../../../../Fugue Icons Pack/icons-shadowless/database-delete.png</iconset>
+   </property>
    <property name="text">
     <string>Delete Record</string>
    </property>
@@ -532,6 +562,10 @@
    </property>
   </action>
   <action name="actionRefresh">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../Fugue Icons Pack/bonus/icons-24/arrow-circle-double-135.png</normaloff>../../../../Fugue Icons Pack/bonus/icons-24/arrow-circle-double-135.png</iconset>
+   </property>
    <property name="text">
     <string>Refresh</string>
    </property>
@@ -543,6 +577,10 @@
    </property>
   </action>
   <action name="actionHome">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-24/home.png</normaloff>../../../../Fugue Icons Pack/bonus/icons-shadowless-24/home.png</iconset>
+   </property>
    <property name="text">
     <string>Home</string>
    </property>
