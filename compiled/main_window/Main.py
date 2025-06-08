@@ -37,6 +37,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.searchButton)
         self.verticalLayout_2.addWidget(self.groupBoxSearch)
         self.databaseTable = QtWidgets.QTableWidget(parent=self.tabDatabase)
+        self.databaseTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.databaseTable.setObjectName("databaseTable")
         self.databaseTable.setColumnCount(8)
         self.databaseTable.setRowCount(0)
