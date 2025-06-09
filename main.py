@@ -67,18 +67,25 @@ class MainWindow(QMainWindow):
             rows = search_onu_info(search_text)
         else:
             rows = display_onu_info(return_rows=True)
-        self.ui.databaseTable.setRowCount(len(rows))
-        self.ui.databaseTable.setColumnCount(8)
-        for row_idx, row_data in enumerate(rows):
-            for col_idx, value in enumerate(row_data):
-                if col_idx == 7:
-                    try:
-                        dt = datetime.datetime.fromisoformat(value)
-                        value = dt.strftime("%Y-%m-%d %H:%M:%S")
-                    except Exception:
-                        pass
-                self.ui.databaseTable.setItem(row_idx, col_idx, QTableWidgetItem(str(value)))
-                
+        if rows:
+            self.ui.databaseTable.setRowCount(len(rows))
+            self.ui.databaseTable.setColumnCount(8)
+            for row_idx, row_data in enumerate(rows):
+                for col_idx, value in enumerate(row_data):
+                    if col_idx == 7:
+                        try:
+                            dt = datetime.datetime.fromisoformat(value)
+                            value = dt.strftime("%Y-%m-%d %H:%M:%S")
+                        except Exception:
+                            pass
+                    self.ui.databaseTable.setItem(row_idx, col_idx, QTableWidgetItem(str(value)))
+        else:
+            self.ui.databaseTable.setRowCount(1)
+            self.ui.databaseTable.setColumnCount(8)
+            for col in range(8):
+                self.ui.databaseTable.setItem(0, col, QTableWidgetItem(""))
+            self.ui.databaseTable.setItem(0, 0, QTableWidgetItem("Not found"))
+
     def go_to_url(self):
         url = self.ui.urlBar.text()
         if not url.startswith("http"):
