@@ -37,6 +37,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.searchButton)
         self.verticalLayout_2.addWidget(self.groupBoxSearch)
         self.databaseTable = QtWidgets.QTableWidget(parent=self.tabDatabase)
+        self.databaseTable.setMinimumSize(QtCore.QSize(1158, 0))
         self.databaseTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.databaseTable.setObjectName("databaseTable")
         self.databaseTable.setColumnCount(8)
@@ -57,7 +58,15 @@ class Ui_MainWindow(object):
         self.databaseTable.setHorizontalHeaderItem(6, item)
         item = QtWidgets.QTableWidgetItem()
         self.databaseTable.setHorizontalHeaderItem(7, item)
+        self.databaseTable.horizontalHeader().setCascadingSectionResizes(True)
+        self.databaseTable.horizontalHeader().setDefaultSectionSize(130)
+        self.databaseTable.horizontalHeader().setSortIndicatorShown(True)
         self.databaseTable.horizontalHeader().setStretchLastSection(True)
+        self.databaseTable.verticalHeader().setVisible(False)
+        self.databaseTable.verticalHeader().setCascadingSectionResizes(False)
+        self.databaseTable.verticalHeader().setHighlightSections(False)
+        self.databaseTable.verticalHeader().setSortIndicatorShown(False)
+        self.databaseTable.verticalHeader().setStretchLastSection(False)
         self.verticalLayout_2.addWidget(self.databaseTable)
         self.tabWidget.addTab(self.tabDatabase, "")
         self.tabScanner = QtWidgets.QWidget()
@@ -246,9 +255,15 @@ class Ui_MainWindow(object):
         icon12.addPixmap(QtGui.QPixmap("C:\\Users\\cruiz\\OneDrive\\Documents\\Github\\HakotX-UI\\ui\\main_window\\../../../../Fugue Icons Pack/bonus/icons-shadowless-24/home.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.actionHome.setIcon(icon12)
         self.actionHome.setObjectName("actionHome")
+        self.actionAdd_to_DB = QtGui.QAction(parent=MainWindow)
+        icon13 = QtGui.QIcon()
+        icon13.addPixmap(QtGui.QPixmap("C:\\Users\\cruiz\\OneDrive\\Documents\\Github\\HakotX-UI\\ui\\main_window\\../../../../Fugue Icons Pack/bonus/icons-24/database-import.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.actionAdd_to_DB.setIcon(icon13)
+        self.actionAdd_to_DB.setObjectName("actionAdd_to_DB")
         self.menuFile.addAction(self.actionScan)
         self.menuFile.addAction(self.actionSave)
         self.menuFile.addSeparator()
+        self.menuFile.addAction(self.actionAdd_to_DB)
         self.menuFile.addAction(self.actionExit)
         self.menuEdit.addAction(self.actionEditRecord)
         self.menuEdit.addAction(self.actionDeleteRecord)
@@ -268,7 +283,7 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.actionHome)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         self.backButton.clicked.connect(self.actionNavigateBack.trigger) # type: ignore
         self.forwardButton.clicked.connect(self.actionNavigateForward.trigger) # type: ignore
         self.refreshButton.clicked.connect(self.actionRefresh.trigger) # type: ignore
@@ -277,10 +292,11 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "HakotX - ONU Scanner & Manager"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "HakotX - ONU Scanner & Viewer"))
         self.groupBoxSearch.setTitle(_translate("MainWindow", "Search & Filter"))
         self.searchInput.setPlaceholderText(_translate("MainWindow", "Search by IP, MAC or SSID..."))
         self.searchButton.setText(_translate("MainWindow", "Search"))
+        self.databaseTable.setSortingEnabled(True)
         item = self.databaseTable.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "IP"))
         item = self.databaseTable.horizontalHeaderItem(1)
@@ -346,4 +362,5 @@ class Ui_MainWindow(object):
         self.actionHome.setText(_translate("MainWindow", "Home"))
         self.actionHome.setToolTip(_translate("MainWindow", "Go to home page"))
         self.actionHome.setShortcut(_translate("MainWindow", "Alt+Home"))
+        self.actionAdd_to_DB.setText(_translate("MainWindow", "Import CSV to DB"))
 from PyQt6 import QtWebEngineWidgets

@@ -11,14 +11,14 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>HakotX - ONU Scanner &amp; Manager</string>
+   <string>HakotX - ONU Scanner &amp; Viewer</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabDatabase">
        <attribute name="title">
@@ -63,11 +63,44 @@
         </item>
         <item>
          <widget class="QTableWidget" name="databaseTable">
+          <property name="minimumSize">
+           <size>
+            <width>1158</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::NoEditTriggers</set>
           </property>
+          <property name="sortingEnabled">
+           <bool>true</bool>
+          </property>
+          <attribute name="horizontalHeaderCascadingSectionResizes">
+           <bool>true</bool>
+          </attribute>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>130</number>
+          </attribute>
+          <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+           <bool>true</bool>
+          </attribute>
           <attribute name="horizontalHeaderStretchLastSection">
            <bool>true</bool>
+          </attribute>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="verticalHeaderCascadingSectionResizes">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="verticalHeaderHighlightSections">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="verticalHeaderStretchLastSection">
+           <bool>false</bool>
           </attribute>
           <column>
            <property name="text">
@@ -401,6 +434,7 @@
     <addaction name="actionScan"/>
     <addaction name="actionSave"/>
     <addaction name="separator"/>
+    <addaction name="actionAdd_to_DB"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -592,6 +626,15 @@
    </property>
    <property name="shortcut">
     <string>Alt+Home</string>
+   </property>
+  </action>
+  <action name="actionAdd_to_DB">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../Fugue Icons Pack/bonus/icons-24/database-import.png</normaloff>../../../../Fugue Icons Pack/bonus/icons-24/database-import.png</iconset>
+   </property>
+   <property name="text">
+    <string>Import CSV to DB</string>
    </property>
   </action>
  </widget>

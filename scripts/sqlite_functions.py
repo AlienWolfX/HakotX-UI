@@ -87,6 +87,33 @@ def update_onu_info(record_id, ip=None, mac=None, ssid_24=None, ssid_5=None, wla
     except Exception as e:
         logging.error(f"Failed to update ONU info for record {record_id}: {e}")
 
+def get_record_id_by_unique_fields(ip, mac, ssid_24):
+    try:
+        c.execute(
+            "SELECT id FROM onu_info WHERE ip=? AND mac=? AND ssid_24=?",
+            (ip, mac, ssid_24)
+        )
+        result = c.fetchone()
+        if result:
+            return result[0]
+        return None
+    except Exception as e:
+        logging.error(f"Failed to get record id: {e}")
+        return None
+
+def delete_onu_info(record_id):
+    """
+    Delete a record from onu_info by its id.
+    """
+    try:
+        c.execute("DELETE FROM onu_info WHERE id = ?", (record_id,))
+        conn.commit()
+        logging.info(f"Deleted ONU record {record_id}.")
+        return True
+    except Exception as e:
+        logging.error(f"Failed to delete ONU info for record {record_id}: {e}")
+        return False
+
 conn = sqlite3.connect('wifi_stuff.db')
 c = conn.cursor()
 
