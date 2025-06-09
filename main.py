@@ -1,6 +1,6 @@
 import sys
 import datetime
-from PyQt6.QtWidgets import QApplication, QMainWindow, QDialog, QTableWidgetItem, QMessageBox
+from PyQt6.QtWidgets import QApplication, QMainWindow, QDialog, QTableWidgetItem, QMessageBox, QFileDialog
 from PyQt6.QtCore import QUrl
 from compiled.main_window.Main import Ui_MainWindow 
 from compiled.dialog.About import Ui_aboutDialog
@@ -11,7 +11,7 @@ from scripts.sqlite_functions import (
     update_onu_info,
     search_onu_info,
     get_record_id_by_unique_fields,
-    delete_onu_info,  # <-- add this import
+    delete_onu_info, 
 )
 
 class AboutDialog(QDialog):
@@ -56,19 +56,14 @@ class MainWindow(QMainWindow):
 
         if hasattr(self.ui, "searchButton"):
             self.ui.searchButton.clicked.connect(self.load_database_table)
-
         if hasattr(self.ui, "searchInput"):
             self.ui.searchInput.textChanged.connect(self.load_database_table)
-
         if hasattr(self.ui, "actionAbout"):
             self.ui.actionAbout.triggered.connect(self.show_about)
-
         if hasattr(self.ui, "actionScan"):
             self.ui.actionScan.triggered.connect(self.ip_scanner_tab)
-
         if hasattr(self.ui, "actionEditRecord"):
             self.ui.actionEditRecord.triggered.connect(self.edit_selected_record)
-
         if hasattr(self.ui, "goButton"):
             self.ui.goButton.clicked.connect(self.go_to_url)
         if hasattr(self.ui, "urlBar"):
@@ -85,9 +80,10 @@ class MainWindow(QMainWindow):
             self.ui.zoomInButton.clicked.connect(self.zoom_in)
         if hasattr(self.ui, "zoomOutButton"):
             self.ui.zoomOutButton.clicked.connect(self.zoom_out)
-
         if hasattr(self.ui, "actionDeleteRecord"):
             self.ui.actionDeleteRecord.triggered.connect(self.delete_selected_record)
+        if hasattr(self.ui, "actionAdd_to_DB"):
+            self.ui.actionAdd_to_DB.triggered.connect(self.add_record_to_db)
 
     def ip_scanner_tab(self):
         if hasattr(self.ui, "tabWidget"):
@@ -95,6 +91,31 @@ class MainWindow(QMainWindow):
                 if self.ui.tabWidget.tabText(i).lower() == "ip scanner":
                     self.ui.tabWidget.setCurrentIndex(i)
                     break
+                
+    def add_record_to_db(self):
+        dialog = QFileDialog(self)
+        dialog.setNameFilter("CSV Files (*.csv)")
+        dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
+        
+        if dialog.exec():
+            csv_files = dialog.selectedFiles()
+            if csv_files:
+                csv_path = csv_files[0]
+                self.process_csv_file(csv_path)
+                
+    def process_csv_file(self, csv_path):
+        try:
+            with open(csv_path, 'r') as file:
+                lines = file.readlines()
+                for line in lines:
+                    fields = line.strip().split(',')
+                    if len(fields) >= 7:
+                        ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source = fields[:7]
+                        insert_onu_info(ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source)
+                self.load_database_table()
+                QMessageBox.information(self, "Success", "Records added successfully.")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to process CSV file: {e}")
 
     def load_database_table(self):
         search_text = self.ui.searchInput.text() if hasattr(self.ui, "searchInput") else ""
