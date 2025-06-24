@@ -1,5 +1,7 @@
 import sys
 import datetime
+import csv
+import os
 from PyQt6.QtWidgets import QApplication, QMainWindow, QDialog, QTableWidgetItem, QMessageBox, QFileDialog
 from PyQt6.QtCore import QUrl
 from compiled.main_window.Main import Ui_MainWindow 
@@ -96,26 +98,47 @@ class MainWindow(QMainWindow):
         dialog = QFileDialog(self)
         dialog.setNameFilter("CSV Files (*.csv)")
         dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
-        
+
         if dialog.exec():
             csv_files = dialog.selectedFiles()
             if csv_files:
                 csv_path = csv_files[0]
                 self.process_csv_file(csv_path)
-                
+
     def process_csv_file(self, csv_path):
-        try:
-            with open(csv_path, 'r') as file:
-                lines = file.readlines()
-                for line in lines:
-                    fields = line.strip().split(',')
-                    if len(fields) >= 7:
-                        ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source = fields[:7]
-                        insert_onu_info(ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source)
-                self.load_database_table()
-                QMessageBox.information(self, "Success", "Records added successfully.")
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"Failed to process CSV file: {e}")
+        imported = 0
+        source_name = os.path.basename(csv_path)
+        with open(csv_path, newline='', encoding='utf-8') as csvfile:
+            reader = csv.reader(csvfile)
+            headers = next(reader)
+            headers = [h.strip().lower() for h in headers]
+
+            # For 2GHz only
+            if "ip" in headers and "ssid_2g" in headers and "psk_2g" in headers and not ("ssid_5g" in headers and "psk_5g" in headers):
+                for row in reader:
+                    if len(row) >= 3:
+                        ip = row[headers.index("ip")]
+                        ssid_24 = row[headers.index("ssid_2g")]
+                        wlan_pwd_24 = row[headers.index("psk_2g")]
+                        insert_onu_info(ip, "", ssid_24, "N/A", wlan_pwd_24, "N/A", source_name)
+                        imported += 1
+            # For 5GHz only
+            elif "ip" in headers and "ssid_2g" in headers and "psk_2g" in headers and "ssid_5g" in headers and "psk_5g" in headers:
+                for row in reader:
+                    if len(row) >= 5:
+                        ip = row[headers.index("ip")]
+                        ssid_24 = row[headers.index("ssid_2g")]
+                        wlan_pwd_24 = row[headers.index("psk_2g")]
+                        ssid_5 = row[headers.index("ssid_5g")]
+                        wlan_pwd_5 = row[headers.index("psk_5g")]
+                        insert_onu_info(ip, "", ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source_name)
+                        imported += 1
+            else:
+                QMessageBox.warning(self, "Unsupported CSV", "CSV format not recognized.")
+                return
+
+        self.load_database_table()
+        QMessageBox.information(self, "Import Complete", f"Imported {imported} records from CSV.")
 
     def load_database_table(self):
         search_text = self.ui.searchInput.text() if hasattr(self.ui, "searchInput") else ""

@@ -8,13 +8,31 @@ def insert_onu_info(ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source):
     last_updated = datetime.datetime.now().isoformat()
     try:
         c.execute(
-            "INSERT INTO onu_info (ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            (ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source, last_updated)
+            "SELECT id FROM onu_info WHERE ip=? AND ssid_24=? AND ssid_5=?",
+            (ip, ssid_24, ssid_5)
         )
-        conn.commit()
-        logging.info(f"{ip} ({mac}) has been added to the onu_info database")
+        result = c.fetchone()
+        if result:
+            update_onu_info(
+                result[0],
+                ip=ip,
+                mac=mac,
+                ssid_24=ssid_24,
+                ssid_5=ssid_5,
+                wlan_pwd_24=wlan_pwd_24,
+                wlan_pwd_5=wlan_pwd_5,
+                source=source
+            )
+            logging.info(f"{ip} ({mac}) duplicate found, updated existing record in onu_info database")
+        else:
+            c.execute(
+                "INSERT INTO onu_info (ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source, last_updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source, last_updated)
+            )
+            conn.commit()
+            logging.info(f"{ip} ({mac}) has been added to the onu_info database")
     except Exception as e:
-        logging.error(f"Failed to insert ONU info for {ip}: {e}")
+        logging.error(f"Failed to insert/update ONU info for {ip}: {e}")
 
 
 def search_onu_info(search_text):
