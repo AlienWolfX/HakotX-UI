@@ -443,6 +443,7 @@
     </property>
     <addaction name="actionEditRecord"/>
     <addaction name="actionDeleteRecord"/>
+    <addaction name="actionDelete_All_Record"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -476,9 +477,11 @@
    <addaction name="separator"/>
    <addaction name="actionEditRecord"/>
    <addaction name="actionDeleteRecord"/>
+   <addaction name="actionDelete_All_Record"/>
    <addaction name="separator"/>
    <addaction name="actionRefresh"/>
    <addaction name="actionHome"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
    <property name="sizeGripEnabled">
@@ -535,17 +538,6 @@
     <string>Ctrl+Shift+S</string>
    </property>
   </action>
-  <action name="actionAddRecord">
-   <property name="text">
-    <string>Add Record</string>
-   </property>
-   <property name="toolTip">
-    <string>Add new record to database</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+N</string>
-   </property>
-  </action>
   <action name="actionEditRecord">
    <property name="icon">
     <iconset>
@@ -574,28 +566,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>
-   </property>
-  </action>
-  <action name="actionNavigateBack">
-   <property name="text">
-    <string>Back</string>
-   </property>
-   <property name="toolTip">
-    <string>Navigate back</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+Left</string>
-   </property>
-  </action>
-  <action name="actionNavigateForward">
-   <property name="text">
-    <string>Forward</string>
-   </property>
-   <property name="toolTip">
-    <string>Navigate forward</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+Right</string>
    </property>
   </action>
   <action name="actionRefresh">
@@ -637,6 +607,27 @@
     <string>Import CSV to DB</string>
    </property>
   </action>
+  <action name="actionDelete_All_Records">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../Fugue Icons Pack/icons-shadowless/database--exclamation.png</normaloff>../../../../Fugue Icons Pack/icons-shadowless/database--exclamation.png</iconset>
+   </property>
+   <property name="text">
+    <string>Delete All Records</string>
+   </property>
+  </action>
+  <action name="actionDelete_All_Record">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../Fugue Icons Pack/icons-shadowless/database--exclamation.png</normaloff>../../../../Fugue Icons Pack/icons-shadowless/database--exclamation.png</iconset>
+   </property>
+   <property name="text">
+    <string>Delete All Record</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -647,38 +638,6 @@
  </customwidgets>
  <resources/>
  <connections>
-  <connection>
-   <sender>backButton</sender>
-   <signal>clicked()</signal>
-   <receiver>actionNavigateBack</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>forwardButton</sender>
-   <signal>clicked()</signal>
-   <receiver>actionNavigateForward</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>refreshButton</sender>
    <signal>clicked()</signal>

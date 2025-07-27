@@ -14,6 +14,7 @@ from scripts.sqlite_functions import (
     search_onu_info,
     get_record_id_by_unique_fields,
     delete_onu_info, 
+    delete_all_records
 )
 
 class AboutDialog(QDialog):
@@ -84,6 +85,8 @@ class MainWindow(QMainWindow):
             self.ui.zoomOutButton.clicked.connect(self.zoom_out)
         if hasattr(self.ui, "actionDeleteRecord"):
             self.ui.actionDeleteRecord.triggered.connect(self.delete_selected_record)
+        if hasattr(self.ui, "actionDelete_All_Record"):
+            self.ui.actionDelete_All_Record.triggered.connect(self.delete_all_records_with_confirmation)
         if hasattr(self.ui, "actionAdd_to_DB"):
             self.ui.actionAdd_to_DB.triggered.connect(self.add_record_to_db)
 
@@ -163,7 +166,7 @@ class MainWindow(QMainWindow):
             self.ui.databaseTable.setColumnCount(8)
             for col in range(8):
                 self.ui.databaseTable.setItem(0, col, QTableWidgetItem(""))
-            self.ui.databaseTable.setItem(0, 0, QTableWidgetItem("Not found"))
+            self.ui.databaseTable.setItem(0, 0, QTableWidgetItem("No records found."))
 
     def edit_selected_record(self):
         selected = self.ui.databaseTable.currentRow()
@@ -224,6 +227,19 @@ class MainWindow(QMainWindow):
                     QMessageBox.warning(self, "Error", "Failed to delete the record.")
         else:
             QMessageBox.warning(self, "Error", "Could not find the record in the database.")
+
+    def delete_all_records_with_confirmation(self):
+        """Delete all records from the database with user confirmation."""
+        reply = QMessageBox.question(
+            self,
+            "Confirm Delete All",
+            "Are you sure you want to delete ALL records? This action cannot be undone.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+        if reply == QMessageBox.StandardButton.Yes:
+            delete_all_records()
+            self.load_database_table()
+            QMessageBox.information(self, "Success", "All records have been deleted.")
 
     def go_to_url(self):
         url = self.ui.urlBar.text()

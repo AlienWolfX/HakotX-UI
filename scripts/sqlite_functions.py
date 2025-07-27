@@ -34,6 +34,16 @@ def insert_onu_info(ip, mac, ssid_24, ssid_5, wlan_pwd_24, wlan_pwd_5, source):
     except Exception as e:
         logging.error(f"Failed to insert/update ONU info for {ip}: {e}")
 
+def delete_all_records():
+    """
+    Delete all records from the onu_info table.
+    """
+    try:
+        c.execute("DELETE FROM onu_info")
+        conn.commit()
+        logging.info("All ONU records deleted successfully.")
+    except Exception as e:
+        logging.error(f"Failed to delete all ONU records: {e}")
 
 def search_onu_info(search_text):
     try:
