@@ -289,7 +289,7 @@ class Ui_MainWindow(object):
         self.toolBar.addSeparator()
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         self.refreshButton.clicked.connect(self.actionRefresh.trigger) # type: ignore
         self.homeButton.clicked.connect(self.actionHome.trigger) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
